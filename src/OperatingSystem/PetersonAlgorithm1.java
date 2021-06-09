@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /*
 Software Solutions to the Critical-Section Problem
-하드웨어의 도움 없는 초기 버전. 임계 구역 문제 해결을 보장하진 못 한다.
+하드웨어의 도움(automic variable)을 받은 버전. 동기화 보장.
 */
 public class PetersonAlgorithm1 {
     static int count = 0;
