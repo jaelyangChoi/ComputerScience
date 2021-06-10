@@ -1,35 +1,26 @@
-package OperatingSystem;
-
-import java.util.concurrent.atomic.AtomicBoolean;
+package OperatingSystem.synchronization;
 
 /*
 Software Solutions to the Critical-Section Problem
-하드웨어의 도움(automic variable)을 받은 버전. 동기화 보장.
+하드웨어의 도움 없는 초기 버전. 임계 구역 문제 해결을 보장하진 못 한다.
 */
-public class PetersonAlgorithm1 {
+public class PetersonAlgorithm0 {
     static int count = 0;
     static int turn = 0;
-    static AtomicBoolean[] flag;
-
-    static {
-        flag = new AtomicBoolean[2];
-        for (int i = 0; i < flag.length; i++)
-            flag[i] = new AtomicBoolean();
-    }
-
+    static boolean[] flag = new boolean[2];
 
     static class Producer implements Runnable {
         @Override
         public void run() {
             for (int k = 0; k < 10000; k++) {
                 /* entry section */
-                flag[0].set(true);
+                flag[0] = true;
                 turn = 1;
-                while (flag[1].get() && turn == 1) ;
+                while (flag[1] && turn == 1) ;
                 /* critical section */
                 count++;
                 /* exit section */
-                flag[0].set(false);
+                flag[0] = false;
                 /* remainder section */
             }
         }
@@ -40,14 +31,13 @@ public class PetersonAlgorithm1 {
         public void run() {
             for (int k = 0; k < 10000; k++) {
                 /* entry section */
-                flag[1].set(true);
+                flag[1] = true;
                 turn = 0;
-                while (flag[0].get() && turn == 0) ;
+                while (flag[0] && turn == 0) ;
                 /* critical section */
                 count--;
                 /* exit section */
-                flag[1].set(false);
-
+                flag[1] = false;
                 /* remainder section */
             }
         }
@@ -60,6 +50,6 @@ public class PetersonAlgorithm1 {
         t2.start();
         t1.join();
         t2.join();
-        System.out.println(PetersonAlgorithm1.count);
+        System.out.println(PetersonAlgorithm0.count);
     }
 }
